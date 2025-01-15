@@ -1,0 +1,5 @@
+
+fun main()
+  val l = default(head([8]), 42)
+  val k = default(head(["waw"]), "ohno")
+  42

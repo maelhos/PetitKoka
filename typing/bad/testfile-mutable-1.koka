@@ -1,0 +1,4 @@
+fun main()
+  val x = 1
+  x := 42
+  println(x)

@@ -1,0 +1,5 @@
+fun foo(f: () -> <console> unit)
+  repeat(2, f)
+fun main()
+  val x = 42
+  foo(fn () { println(x) })

@@ -1,0 +1,6 @@
+
+fun foo() : <div> ()
+  while {False} {}
+
+fun main() : <div> ()
+  repeat(10, foo)

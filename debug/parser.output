@@ -1,0 +1,2506 @@
+State 43 conflicts: 2 shift/reduce
+State 44 conflicts: 2 shift/reduce
+State 45 conflicts: 2 shift/reduce
+State 49 conflicts: 14 shift/reduce
+
+
+Grammar
+
+    0 $accept: file $end
+
+    1 file: ε
+    2     | TSEMICOLON file
+    3     | non_empty_decl_list_semicolon
+
+    4 semicolon_plus: TSEMICOLON
+    5               | semicolon_plus TSEMICOLON
+
+    6 non_empty_decl_list_semicolon: decl semicolon_plus
+    7                              | non_empty_decl_list_semicolon decl semicolon_plus
+
+    8 decl: TFUN TIDENTIFIER funbody
+
+    9 funbody: TLPAREN param_list_comma TRPAREN expr
+   10        | TLPAREN param_list_comma TRPAREN annot expr
+
+   11 non_empty_param_list_comma: param
+   12                           | non_empty_param_list_comma TCOMMA param
+
+   13 param_list_comma: ε
+   14                 | non_empty_param_list_comma
+
+   15 non_empty_ident_list_comma: TIDENTIFIER
+   16                           | non_empty_ident_list_comma TCOMMA TIDENTIFIER
+
+   17 ident_list_comma: ε
+   18                 | non_empty_ident_list_comma
+
+   19 param: TIDENTIFIER TCOLON type
+
+   20 annot: TCOLON result
+
+   21 result: type
+   22       | TCLT ident_list_comma TCGT type
+
+   23 type: atype
+   24     | atype TRARROW result
+   25     | TLPAREN type_list_comma_2_or_more TRPAREN TRARROW result
+
+   26 type_list_comma_2_or_more: type TCOMMA type
+   27                          | type_list_comma_2_or_more TCOMMA type
+
+   28 atype: TIDENTIFIER
+   29      | TIDENTIFIER TCLT type TCGT
+   30      | TLPAREN type TRPAREN
+   31      | TLPAREN TRPAREN
+
+   32 atom: atom_basic
+   33     | atom_call
+
+   34 atom_basic: TTRUE
+   35           | TFALSE
+   36           | TINTEGER
+   37           | TSTRING
+   38           | TLPAREN TRPAREN
+   39           | TIDENTIFIER
+   40           | TLPAREN expr TRPAREN
+   41           | TLBRACK expr_list_comma TRBRACK
+   42           | atom_sugar
+
+   43 atom_call: atom TLPAREN expr_list_comma TRPAREN
+   44          | atom TDOT TIDENTIFIER
+   45          | atom_basic TFN funbody
+   46          | atom_basic block
+
+   47 atom_sugar: atom_call TFN funbody
+   48           | atom_call block
+
+   49 expr: block
+   50     | bexpr
+
+   51 non_empty_expr_list_comma: expr
+   52                          | non_empty_expr_list_comma TCOMMA expr
+
+   53 expr_list_comma: ε
+   54                | non_empty_expr_list_comma
+
+   55 bexpr: bexpr_op
+   56      | TIF bexpr TTHEN expr elif_list
+   57      | TIF bexpr TTHEN expr elif_list TELSE expr
+   58      | TFN funbody
+   59      | TRETURN expr
+   60      | TIF bexpr TRETURN expr
+   61      | TIDENTIFIER TCOLONEQ bexpr
+
+   62 bexpr_op: atom
+   63         | TTILDE bexpr
+   64         | TEXCL bexpr
+   65         | bexpr_op TCEQ bexpr_op
+   66         | bexpr_op TCNE bexpr_op
+   67         | bexpr_op TCLE bexpr_op
+   68         | bexpr_op TCLT bexpr_op
+   69         | bexpr_op TCGE bexpr_op
+   70         | bexpr_op TCGT bexpr_op
+   71         | bexpr_op TADD bexpr_op
+   72         | bexpr_op TSUB bexpr_op
+   73         | bexpr_op TMUL bexpr_op
+   74         | bexpr_op TDIV bexpr_op
+   75         | bexpr_op TMOD bexpr_op
+   76         | bexpr_op TINC bexpr_op
+   77         | bexpr_op TAND bexpr_op
+   78         | bexpr_op TOR bexpr_op
+
+   79 elif_list: ε
+   80          | elif_list TELIF bexpr TTHEN expr
+
+   81 block: TLBRACE block_content_last TRBRACE
+
+   82 bexpr_maybe: ε
+   83            | bexpr
+
+   84 block_content_last: block_content
+   85                   | bexpr_maybe
+
+   86 block_content: stmt TSEMICOLON block_content_last
+
+   87 stmt: bexpr_maybe
+   88     | TVAL TIDENTIFIER TEQUAL expr
+   89     | TVAR TIDENTIFIER TCOLONEQ expr
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    TIDENTIFIER <str> (258) 8 15 16 19 28 29 39 44 61 88 89
+    TSTRING <str> (259) 37
+    TINTEGER <str> (260) 36
+    TIF <token> (261) 56 57 60
+    TELSE <token> (262) 57
+    TELIF <token> (263) 80
+    TFN <token> (264) 45 47 58
+    TFUN <token> (265) 8
+    TRETURN <token> (266) 59 60
+    TTHEN <token> (267) 56 57 80
+    TVAL <token> (268) 88
+    TVAR <token> (269) 89
+    TTRUE <token> (270) 34
+    TFALSE <token> (271) 35
+    TADD <token> (272) 71
+    TSUB <token> (273) 72
+    TMUL <token> (274) 73
+    TDIV <token> (275) 74
+    TMOD <token> (276) 75
+    TINC <token> (277) 76
+    TCLT <token> (278) 22 29 68
+    TCLE <token> (279) 67
+    TCGT <token> (280) 22 29 70
+    TCGE <token> (281) 69
+    TCEQ <token> (282) 65
+    TCNE <token> (283) 66
+    TAND <token> (284) 77
+    TOR <token> (285) 78
+    TRPAREN <token> (286) 9 10 25 30 31 38 40 43
+    TRBRACE <token> (287) 81
+    TCOMMA <token> (288) 12 16 26 27 52
+    TRARROW <token> (289) 24 25
+    TLBRACE <token> (290) 81
+    TLBRACK <token> (291) 41
+    TRBRACK <token> (292) 41
+    TEQUAL <token> (293) 88
+    TDOT <token> (294) 44
+    TCOLONEQ <token> (295) 61 89
+    TCOLON <token> (296) 19 20
+    TLPAREN <token> (297) 9 10 25 30 31 38 40 43
+    TSEMICOLON <token> (298) 2 4 5 86
+    TTILDE <token> (299) 63
+    TEXCL <token> (300) 64
+    PATOM (301)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (47)
+        on left: 0
+    file <decl_list> (48)
+        on left: 1 2 3
+        on right: 0 2
+    semicolon_plus (49)
+        on left: 4 5
+        on right: 5 6 7
+    non_empty_decl_list_semicolon <decl_list> (50)
+        on left: 6 7
+        on right: 3 7
+    decl <decl> (51)
+        on left: 8
+        on right: 6 7
+    funbody <funbody> (52)
+        on left: 9 10
+        on right: 8 45 47 58
+    non_empty_param_list_comma <param_list> (53)
+        on left: 11 12
+        on right: 12 14
+    param_list_comma <param_list> (54)
+        on left: 13 14
+        on right: 9 10
+    non_empty_ident_list_comma <ident_list> (55)
+        on left: 15 16
+        on right: 16 18
+    ident_list_comma <ident_list> (56)
+        on left: 17 18
+        on right: 22
+    param <param> (57)
+        on left: 19
+        on right: 11 12
+    annot <rtype> (58)
+        on left: 20
+        on right: 10
+    result <rtype> (59)
+        on left: 21 22
+        on right: 20 24 25
+    type <type> (60)
+        on left: 23 24 25
+        on right: 19 21 22 26 27 29 30
+    type_list_comma_2_or_more <type_list> (61)
+        on left: 26 27
+        on right: 25 27
+    atype <type> (62)
+        on left: 28 29 30 31
+        on right: 23 24
+    atom <atom> (63)
+        on left: 32 33
+        on right: 43 44 62
+    atom_basic <atom> (64)
+        on left: 34 35 36 37 38 39 40 41 42
+        on right: 32 45 46
+    atom_call <atom_call> (65)
+        on left: 43 44 45 46
+        on right: 33 47 48
+    atom_sugar <atom> (66)
+        on left: 47 48
+        on right: 42
+    expr <expr> (67)
+        on left: 49 50
+        on right: 9 10 40 51 52 56 57 59 60 80 88 89
+    non_empty_expr_list_comma <expr_list> (68)
+        on left: 51 52
+        on right: 52 54
+    expr_list_comma <expr_list> (69)
+        on left: 53 54
+        on right: 41 43
+    bexpr <bexpr> (70)
+        on left: 55 56 57 58 59 60 61
+        on right: 50 56 57 60 61 63 64 80 83
+    bexpr_op <bexpr> (71)
+        on left: 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78
+        on right: 55 65 66 67 68 69 70 71 72 73 74 75 76 77 78
+    elif_list <bexpr_if> (72)
+        on left: 79 80
+        on right: 56 57 80
+    block <block> (73)
+        on left: 81
+        on right: 46 48 49
+    bexpr_maybe <bexpr_maybe> (74)
+        on left: 82 83
+        on right: 85 87
+    block_content_last <block_maybe> (75)
+        on left: 84 85
+        on right: 81 86
+    block_content <block_maybe> (76)
+        on left: 86
+        on right: 84
+    stmt <stmt_maybe> (77)
+        on left: 87 88 89
+        on right: 86
+
+
+State 0
+
+    0 $accept: • file $end
+
+    TFUN        shift, and go to state 1
+    TSEMICOLON  shift, and go to state 2
+
+    $default  reduce using rule 1 (file)
+
+    file                           go to state 3
+    non_empty_decl_list_semicolon  go to state 4
+    decl                           go to state 5
+
+
+State 1
+
+    8 decl: TFUN • TIDENTIFIER funbody
+
+    TIDENTIFIER  shift, and go to state 6
+
+
+State 2
+
+    2 file: TSEMICOLON • file
+
+    TFUN        shift, and go to state 1
+    TSEMICOLON  shift, and go to state 2
+
+    $default  reduce using rule 1 (file)
+
+    file                           go to state 7
+    non_empty_decl_list_semicolon  go to state 4
+    decl                           go to state 5
+
+
+State 3
+
+    0 $accept: file • $end
+
+    $end  shift, and go to state 8
+
+
+State 4
+
+    3 file: non_empty_decl_list_semicolon •
+    7 non_empty_decl_list_semicolon: non_empty_decl_list_semicolon • decl semicolon_plus
+
+    TFUN  shift, and go to state 1
+
+    $default  reduce using rule 3 (file)
+
+    decl  go to state 9
+
+
+State 5
+
+    6 non_empty_decl_list_semicolon: decl • semicolon_plus
+
+    TSEMICOLON  shift, and go to state 10
+
+    semicolon_plus  go to state 11
+
+
+State 6
+
+    8 decl: TFUN TIDENTIFIER • funbody
+
+    TLPAREN  shift, and go to state 12
+
+    funbody  go to state 13
+
+
+State 7
+
+    2 file: TSEMICOLON file •
+
+    $default  reduce using rule 2 (file)
+
+
+State 8
+
+    0 $accept: file $end •
+
+    $default  accept
+
+
+State 9
+
+    7 non_empty_decl_list_semicolon: non_empty_decl_list_semicolon decl • semicolon_plus
+
+    TSEMICOLON  shift, and go to state 10
+
+    semicolon_plus  go to state 14
+
+
+State 10
+
+    4 semicolon_plus: TSEMICOLON •
+
+    $default  reduce using rule 4 (semicolon_plus)
+
+
+State 11
+
+    5 semicolon_plus: semicolon_plus • TSEMICOLON
+    6 non_empty_decl_list_semicolon: decl semicolon_plus •
+
+    TSEMICOLON  shift, and go to state 15
+
+    $default  reduce using rule 6 (non_empty_decl_list_semicolon)
+
+
+State 12
+
+    9 funbody: TLPAREN • param_list_comma TRPAREN expr
+   10        | TLPAREN • param_list_comma TRPAREN annot expr
+
+    TIDENTIFIER  shift, and go to state 16
+
+    $default  reduce using rule 13 (param_list_comma)
+
+    non_empty_param_list_comma  go to state 17
+    param_list_comma            go to state 18
+    param                       go to state 19
+
+
+State 13
+
+    8 decl: TFUN TIDENTIFIER funbody •
+
+    $default  reduce using rule 8 (decl)
+
+
+State 14
+
+    5 semicolon_plus: semicolon_plus • TSEMICOLON
+    7 non_empty_decl_list_semicolon: non_empty_decl_list_semicolon decl semicolon_plus •
+
+    TSEMICOLON  shift, and go to state 15
+
+    $default  reduce using rule 7 (non_empty_decl_list_semicolon)
+
+
+State 15
+
+    5 semicolon_plus: semicolon_plus TSEMICOLON •
+
+    $default  reduce using rule 5 (semicolon_plus)
+
+
+State 16
+
+   19 param: TIDENTIFIER • TCOLON type
+
+    TCOLON  shift, and go to state 20
+
+
+State 17
+
+   12 non_empty_param_list_comma: non_empty_param_list_comma • TCOMMA param
+   14 param_list_comma: non_empty_param_list_comma •
+
+    TCOMMA  shift, and go to state 21
+
+    $default  reduce using rule 14 (param_list_comma)
+
+
+State 18
+
+    9 funbody: TLPAREN param_list_comma • TRPAREN expr
+   10        | TLPAREN param_list_comma • TRPAREN annot expr
+
+    TRPAREN  shift, and go to state 22
+
+
+State 19
+
+   11 non_empty_param_list_comma: param •
+
+    $default  reduce using rule 11 (non_empty_param_list_comma)
+
+
+State 20
+
+   19 param: TIDENTIFIER TCOLON • type
+
+    TIDENTIFIER  shift, and go to state 23
+    TLPAREN      shift, and go to state 24
+
+    type   go to state 25
+    atype  go to state 26
+
+
+State 21
+
+   12 non_empty_param_list_comma: non_empty_param_list_comma TCOMMA • param
+
+    TIDENTIFIER  shift, and go to state 16
+
+    param  go to state 27
+
+
+State 22
+
+    9 funbody: TLPAREN param_list_comma TRPAREN • expr
+   10        | TLPAREN param_list_comma TRPAREN • annot expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TCOLON       shift, and go to state 38
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    annot       go to state 42
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 47
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 23
+
+   28 atype: TIDENTIFIER •
+   29      | TIDENTIFIER • TCLT type TCGT
+
+    TCLT  shift, and go to state 51
+
+    $default  reduce using rule 28 (atype)
+
+
+State 24
+
+   25 type: TLPAREN • type_list_comma_2_or_more TRPAREN TRARROW result
+   30 atype: TLPAREN • type TRPAREN
+   31      | TLPAREN • TRPAREN
+
+    TIDENTIFIER  shift, and go to state 23
+    TRPAREN      shift, and go to state 52
+    TLPAREN      shift, and go to state 24
+
+    type                       go to state 53
+    type_list_comma_2_or_more  go to state 54
+    atype                      go to state 26
+
+
+State 25
+
+   19 param: TIDENTIFIER TCOLON type •
+
+    $default  reduce using rule 19 (param)
+
+
+State 26
+
+   23 type: atype •
+   24     | atype • TRARROW result
+
+    TRARROW  shift, and go to state 55
+
+    $default  reduce using rule 23 (type)
+
+
+State 27
+
+   12 non_empty_param_list_comma: non_empty_param_list_comma TCOMMA param •
+
+    $default  reduce using rule 12 (non_empty_param_list_comma)
+
+
+State 28
+
+   39 atom_basic: TIDENTIFIER •
+   61 bexpr: TIDENTIFIER • TCOLONEQ bexpr
+
+    TCOLONEQ  shift, and go to state 56
+
+    $default  reduce using rule 39 (atom_basic)
+
+
+State 29
+
+   37 atom_basic: TSTRING •
+
+    $default  reduce using rule 37 (atom_basic)
+
+
+State 30
+
+   36 atom_basic: TINTEGER •
+
+    $default  reduce using rule 36 (atom_basic)
+
+
+State 31
+
+   56 bexpr: TIF • bexpr TTHEN expr elif_list
+   57      | TIF • bexpr TTHEN expr elif_list TELSE expr
+   60      | TIF • bexpr TRETURN expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr       go to state 57
+    bexpr_op    go to state 49
+
+
+State 32
+
+   58 bexpr: TFN • funbody
+
+    TLPAREN  shift, and go to state 12
+
+    funbody  go to state 58
+
+
+State 33
+
+   59 bexpr: TRETURN • expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 59
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 34
+
+   34 atom_basic: TTRUE •
+
+    $default  reduce using rule 34 (atom_basic)
+
+
+State 35
+
+   35 atom_basic: TFALSE •
+
+    $default  reduce using rule 35 (atom_basic)
+
+
+State 36
+
+   81 block: TLBRACE • block_content_last TRBRACE
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TVAL         shift, and go to state 60
+    TVAR         shift, and go to state 61
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    $default  reduce using rule 82 (bexpr_maybe)
+
+    atom                go to state 43
+    atom_basic          go to state 44
+    atom_call           go to state 45
+    atom_sugar          go to state 46
+    bexpr               go to state 62
+    bexpr_op            go to state 49
+    bexpr_maybe         go to state 63
+    block_content_last  go to state 64
+    block_content       go to state 65
+    stmt                go to state 66
+
+
+State 37
+
+   41 atom_basic: TLBRACK • expr_list_comma TRBRACK
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    $default  reduce using rule 53 (expr_list_comma)
+
+    atom                       go to state 43
+    atom_basic                 go to state 44
+    atom_call                  go to state 45
+    atom_sugar                 go to state 46
+    expr                       go to state 67
+    non_empty_expr_list_comma  go to state 68
+    expr_list_comma            go to state 69
+    bexpr                      go to state 48
+    bexpr_op                   go to state 49
+    block                      go to state 50
+
+
+State 38
+
+   20 annot: TCOLON • result
+
+    TIDENTIFIER  shift, and go to state 23
+    TCLT         shift, and go to state 70
+    TLPAREN      shift, and go to state 24
+
+    result  go to state 71
+    type    go to state 72
+    atype   go to state 26
+
+
+State 39
+
+   38 atom_basic: TLPAREN • TRPAREN
+   40           | TLPAREN • expr TRPAREN
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TRPAREN      shift, and go to state 73
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 74
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 40
+
+   63 bexpr_op: TTILDE • bexpr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr       go to state 75
+    bexpr_op    go to state 49
+
+
+State 41
+
+   64 bexpr_op: TEXCL • bexpr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr       go to state 76
+    bexpr_op    go to state 49
+
+
+State 42
+
+   10 funbody: TLPAREN param_list_comma TRPAREN annot • expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 77
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 43
+
+   43 atom_call: atom • TLPAREN expr_list_comma TRPAREN
+   44          | atom • TDOT TIDENTIFIER
+   62 bexpr_op: atom •
+
+    TDOT     shift, and go to state 78
+    TLPAREN  shift, and go to state 79
+
+    TDOT      [reduce using rule 62 (bexpr_op)]
+    TLPAREN   [reduce using rule 62 (bexpr_op)]
+    $default  reduce using rule 62 (bexpr_op)
+
+
+State 44
+
+   32 atom: atom_basic •
+   45 atom_call: atom_basic • TFN funbody
+   46          | atom_basic • block
+
+    TFN      shift, and go to state 80
+    TLBRACE  shift, and go to state 36
+
+    TFN       [reduce using rule 32 (atom)]
+    TLBRACE   [reduce using rule 32 (atom)]
+    $default  reduce using rule 32 (atom)
+
+    block  go to state 81
+
+
+State 45
+
+   33 atom: atom_call •
+   47 atom_sugar: atom_call • TFN funbody
+   48           | atom_call • block
+
+    TFN      shift, and go to state 82
+    TLBRACE  shift, and go to state 36
+
+    TFN       [reduce using rule 33 (atom)]
+    TLBRACE   [reduce using rule 33 (atom)]
+    $default  reduce using rule 33 (atom)
+
+    block  go to state 83
+
+
+State 46
+
+   42 atom_basic: atom_sugar •
+
+    $default  reduce using rule 42 (atom_basic)
+
+
+State 47
+
+    9 funbody: TLPAREN param_list_comma TRPAREN expr •
+
+    $default  reduce using rule 9 (funbody)
+
+
+State 48
+
+   50 expr: bexpr •
+
+    $default  reduce using rule 50 (expr)
+
+
+State 49
+
+   55 bexpr: bexpr_op •
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TADD  shift, and go to state 84
+    TSUB  shift, and go to state 85
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+    TINC  shift, and go to state 89
+    TCLT  shift, and go to state 90
+    TCLE  shift, and go to state 91
+    TCGT  shift, and go to state 92
+    TCGE  shift, and go to state 93
+    TCEQ  shift, and go to state 94
+    TCNE  shift, and go to state 95
+    TAND  shift, and go to state 96
+    TOR   shift, and go to state 97
+
+    TADD      [reduce using rule 55 (bexpr)]
+    TSUB      [reduce using rule 55 (bexpr)]
+    TMUL      [reduce using rule 55 (bexpr)]
+    TDIV      [reduce using rule 55 (bexpr)]
+    TMOD      [reduce using rule 55 (bexpr)]
+    TINC      [reduce using rule 55 (bexpr)]
+    TCLT      [reduce using rule 55 (bexpr)]
+    TCLE      [reduce using rule 55 (bexpr)]
+    TCGT      [reduce using rule 55 (bexpr)]
+    TCGE      [reduce using rule 55 (bexpr)]
+    TCEQ      [reduce using rule 55 (bexpr)]
+    TCNE      [reduce using rule 55 (bexpr)]
+    TAND      [reduce using rule 55 (bexpr)]
+    TOR       [reduce using rule 55 (bexpr)]
+    $default  reduce using rule 55 (bexpr)
+
+
+State 50
+
+   49 expr: block •
+
+    $default  reduce using rule 49 (expr)
+
+
+State 51
+
+   29 atype: TIDENTIFIER TCLT • type TCGT
+
+    TIDENTIFIER  shift, and go to state 23
+    TLPAREN      shift, and go to state 24
+
+    type   go to state 98
+    atype  go to state 26
+
+
+State 52
+
+   31 atype: TLPAREN TRPAREN •
+
+    $default  reduce using rule 31 (atype)
+
+
+State 53
+
+   26 type_list_comma_2_or_more: type • TCOMMA type
+   30 atype: TLPAREN type • TRPAREN
+
+    TRPAREN  shift, and go to state 99
+    TCOMMA   shift, and go to state 100
+
+
+State 54
+
+   25 type: TLPAREN type_list_comma_2_or_more • TRPAREN TRARROW result
+   27 type_list_comma_2_or_more: type_list_comma_2_or_more • TCOMMA type
+
+    TRPAREN  shift, and go to state 101
+    TCOMMA   shift, and go to state 102
+
+
+State 55
+
+   24 type: atype TRARROW • result
+
+    TIDENTIFIER  shift, and go to state 23
+    TCLT         shift, and go to state 70
+    TLPAREN      shift, and go to state 24
+
+    result  go to state 103
+    type    go to state 72
+    atype   go to state 26
+
+
+State 56
+
+   61 bexpr: TIDENTIFIER TCOLONEQ • bexpr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr       go to state 104
+    bexpr_op    go to state 49
+
+
+State 57
+
+   56 bexpr: TIF bexpr • TTHEN expr elif_list
+   57      | TIF bexpr • TTHEN expr elif_list TELSE expr
+   60      | TIF bexpr • TRETURN expr
+
+    TRETURN  shift, and go to state 105
+    TTHEN    shift, and go to state 106
+
+
+State 58
+
+   58 bexpr: TFN funbody •
+
+    $default  reduce using rule 58 (bexpr)
+
+
+State 59
+
+   59 bexpr: TRETURN expr •
+
+    $default  reduce using rule 59 (bexpr)
+
+
+State 60
+
+   88 stmt: TVAL • TIDENTIFIER TEQUAL expr
+
+    TIDENTIFIER  shift, and go to state 107
+
+
+State 61
+
+   89 stmt: TVAR • TIDENTIFIER TCOLONEQ expr
+
+    TIDENTIFIER  shift, and go to state 108
+
+
+State 62
+
+   83 bexpr_maybe: bexpr •
+
+    $default  reduce using rule 83 (bexpr_maybe)
+
+
+State 63
+
+   85 block_content_last: bexpr_maybe •
+   87 stmt: bexpr_maybe •
+
+    TSEMICOLON  reduce using rule 87 (stmt)
+    $default    reduce using rule 85 (block_content_last)
+
+
+State 64
+
+   81 block: TLBRACE block_content_last • TRBRACE
+
+    TRBRACE  shift, and go to state 109
+
+
+State 65
+
+   84 block_content_last: block_content •
+
+    $default  reduce using rule 84 (block_content_last)
+
+
+State 66
+
+   86 block_content: stmt • TSEMICOLON block_content_last
+
+    TSEMICOLON  shift, and go to state 110
+
+
+State 67
+
+   51 non_empty_expr_list_comma: expr •
+
+    $default  reduce using rule 51 (non_empty_expr_list_comma)
+
+
+State 68
+
+   52 non_empty_expr_list_comma: non_empty_expr_list_comma • TCOMMA expr
+   54 expr_list_comma: non_empty_expr_list_comma •
+
+    TCOMMA  shift, and go to state 111
+
+    $default  reduce using rule 54 (expr_list_comma)
+
+
+State 69
+
+   41 atom_basic: TLBRACK expr_list_comma • TRBRACK
+
+    TRBRACK  shift, and go to state 112
+
+
+State 70
+
+   22 result: TCLT • ident_list_comma TCGT type
+
+    TIDENTIFIER  shift, and go to state 113
+
+    $default  reduce using rule 17 (ident_list_comma)
+
+    non_empty_ident_list_comma  go to state 114
+    ident_list_comma            go to state 115
+
+
+State 71
+
+   20 annot: TCOLON result •
+
+    $default  reduce using rule 20 (annot)
+
+
+State 72
+
+   21 result: type •
+
+    $default  reduce using rule 21 (result)
+
+
+State 73
+
+   38 atom_basic: TLPAREN TRPAREN •
+
+    $default  reduce using rule 38 (atom_basic)
+
+
+State 74
+
+   40 atom_basic: TLPAREN expr • TRPAREN
+
+    TRPAREN  shift, and go to state 116
+
+
+State 75
+
+   63 bexpr_op: TTILDE bexpr •
+
+    $default  reduce using rule 63 (bexpr_op)
+
+
+State 76
+
+   64 bexpr_op: TEXCL bexpr •
+
+    $default  reduce using rule 64 (bexpr_op)
+
+
+State 77
+
+   10 funbody: TLPAREN param_list_comma TRPAREN annot expr •
+
+    $default  reduce using rule 10 (funbody)
+
+
+State 78
+
+   44 atom_call: atom TDOT • TIDENTIFIER
+
+    TIDENTIFIER  shift, and go to state 117
+
+
+State 79
+
+   43 atom_call: atom TLPAREN • expr_list_comma TRPAREN
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    $default  reduce using rule 53 (expr_list_comma)
+
+    atom                       go to state 43
+    atom_basic                 go to state 44
+    atom_call                  go to state 45
+    atom_sugar                 go to state 46
+    expr                       go to state 67
+    non_empty_expr_list_comma  go to state 68
+    expr_list_comma            go to state 118
+    bexpr                      go to state 48
+    bexpr_op                   go to state 49
+    block                      go to state 50
+
+
+State 80
+
+   45 atom_call: atom_basic TFN • funbody
+
+    TLPAREN  shift, and go to state 12
+
+    funbody  go to state 119
+
+
+State 81
+
+   46 atom_call: atom_basic block •
+
+    $default  reduce using rule 46 (atom_call)
+
+
+State 82
+
+   47 atom_sugar: atom_call TFN • funbody
+
+    TLPAREN  shift, and go to state 12
+
+    funbody  go to state 120
+
+
+State 83
+
+   48 atom_sugar: atom_call block •
+
+    $default  reduce using rule 48 (atom_sugar)
+
+
+State 84
+
+   71 bexpr_op: bexpr_op TADD • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 122
+
+
+State 85
+
+   72 bexpr_op: bexpr_op TSUB • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 123
+
+
+State 86
+
+   73 bexpr_op: bexpr_op TMUL • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 124
+
+
+State 87
+
+   74 bexpr_op: bexpr_op TDIV • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 125
+
+
+State 88
+
+   75 bexpr_op: bexpr_op TMOD • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 126
+
+
+State 89
+
+   76 bexpr_op: bexpr_op TINC • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 127
+
+
+State 90
+
+   68 bexpr_op: bexpr_op TCLT • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 128
+
+
+State 91
+
+   67 bexpr_op: bexpr_op TCLE • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 129
+
+
+State 92
+
+   70 bexpr_op: bexpr_op TCGT • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 130
+
+
+State 93
+
+   69 bexpr_op: bexpr_op TCGE • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 131
+
+
+State 94
+
+   65 bexpr_op: bexpr_op TCEQ • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 132
+
+
+State 95
+
+   66 bexpr_op: bexpr_op TCNE • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 133
+
+
+State 96
+
+   77 bexpr_op: bexpr_op TAND • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 134
+
+
+State 97
+
+   78 bexpr_op: bexpr_op TOR • bexpr_op
+
+    TIDENTIFIER  shift, and go to state 121
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr_op    go to state 135
+
+
+State 98
+
+   29 atype: TIDENTIFIER TCLT type • TCGT
+
+    TCGT  shift, and go to state 136
+
+
+State 99
+
+   30 atype: TLPAREN type TRPAREN •
+
+    $default  reduce using rule 30 (atype)
+
+
+State 100
+
+   26 type_list_comma_2_or_more: type TCOMMA • type
+
+    TIDENTIFIER  shift, and go to state 23
+    TLPAREN      shift, and go to state 24
+
+    type   go to state 137
+    atype  go to state 26
+
+
+State 101
+
+   25 type: TLPAREN type_list_comma_2_or_more TRPAREN • TRARROW result
+
+    TRARROW  shift, and go to state 138
+
+
+State 102
+
+   27 type_list_comma_2_or_more: type_list_comma_2_or_more TCOMMA • type
+
+    TIDENTIFIER  shift, and go to state 23
+    TLPAREN      shift, and go to state 24
+
+    type   go to state 139
+    atype  go to state 26
+
+
+State 103
+
+   24 type: atype TRARROW result •
+
+    $default  reduce using rule 24 (type)
+
+
+State 104
+
+   61 bexpr: TIDENTIFIER TCOLONEQ bexpr •
+
+    $default  reduce using rule 61 (bexpr)
+
+
+State 105
+
+   60 bexpr: TIF bexpr TRETURN • expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 140
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 106
+
+   56 bexpr: TIF bexpr TTHEN • expr elif_list
+   57      | TIF bexpr TTHEN • expr elif_list TELSE expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 141
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 107
+
+   88 stmt: TVAL TIDENTIFIER • TEQUAL expr
+
+    TEQUAL  shift, and go to state 142
+
+
+State 108
+
+   89 stmt: TVAR TIDENTIFIER • TCOLONEQ expr
+
+    TCOLONEQ  shift, and go to state 143
+
+
+State 109
+
+   81 block: TLBRACE block_content_last TRBRACE •
+
+    $default  reduce using rule 81 (block)
+
+
+State 110
+
+   86 block_content: stmt TSEMICOLON • block_content_last
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TVAL         shift, and go to state 60
+    TVAR         shift, and go to state 61
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    $default  reduce using rule 82 (bexpr_maybe)
+
+    atom                go to state 43
+    atom_basic          go to state 44
+    atom_call           go to state 45
+    atom_sugar          go to state 46
+    bexpr               go to state 62
+    bexpr_op            go to state 49
+    bexpr_maybe         go to state 63
+    block_content_last  go to state 144
+    block_content       go to state 65
+    stmt                go to state 66
+
+
+State 111
+
+   52 non_empty_expr_list_comma: non_empty_expr_list_comma TCOMMA • expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 145
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 112
+
+   41 atom_basic: TLBRACK expr_list_comma TRBRACK •
+
+    $default  reduce using rule 41 (atom_basic)
+
+
+State 113
+
+   15 non_empty_ident_list_comma: TIDENTIFIER •
+
+    $default  reduce using rule 15 (non_empty_ident_list_comma)
+
+
+State 114
+
+   16 non_empty_ident_list_comma: non_empty_ident_list_comma • TCOMMA TIDENTIFIER
+   18 ident_list_comma: non_empty_ident_list_comma •
+
+    TCOMMA  shift, and go to state 146
+
+    $default  reduce using rule 18 (ident_list_comma)
+
+
+State 115
+
+   22 result: TCLT ident_list_comma • TCGT type
+
+    TCGT  shift, and go to state 147
+
+
+State 116
+
+   40 atom_basic: TLPAREN expr TRPAREN •
+
+    $default  reduce using rule 40 (atom_basic)
+
+
+State 117
+
+   44 atom_call: atom TDOT TIDENTIFIER •
+
+    $default  reduce using rule 44 (atom_call)
+
+
+State 118
+
+   43 atom_call: atom TLPAREN expr_list_comma • TRPAREN
+
+    TRPAREN  shift, and go to state 148
+
+
+State 119
+
+   45 atom_call: atom_basic TFN funbody •
+
+    $default  reduce using rule 45 (atom_call)
+
+
+State 120
+
+   47 atom_sugar: atom_call TFN funbody •
+
+    $default  reduce using rule 47 (atom_sugar)
+
+
+State 121
+
+   39 atom_basic: TIDENTIFIER •
+
+    $default  reduce using rule 39 (atom_basic)
+
+
+State 122
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   71         | bexpr_op TADD bexpr_op •
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+
+    $default  reduce using rule 71 (bexpr_op)
+
+
+State 123
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   72         | bexpr_op TSUB bexpr_op •
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+
+    $default  reduce using rule 72 (bexpr_op)
+
+
+State 124
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   73         | bexpr_op TMUL bexpr_op •
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    $default  reduce using rule 73 (bexpr_op)
+
+
+State 125
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   74         | bexpr_op TDIV bexpr_op •
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    $default  reduce using rule 74 (bexpr_op)
+
+
+State 126
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   75         | bexpr_op TMOD bexpr_op •
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    $default  reduce using rule 75 (bexpr_op)
+
+
+State 127
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   76         | bexpr_op TINC bexpr_op •
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+
+    $default  reduce using rule 76 (bexpr_op)
+
+
+State 128
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   68         | bexpr_op TCLT bexpr_op •
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TADD  shift, and go to state 84
+    TSUB  shift, and go to state 85
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+    TINC  shift, and go to state 89
+
+    $default  reduce using rule 68 (bexpr_op)
+
+
+State 129
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   67         | bexpr_op TCLE bexpr_op •
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TADD  shift, and go to state 84
+    TSUB  shift, and go to state 85
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+    TINC  shift, and go to state 89
+
+    $default  reduce using rule 67 (bexpr_op)
+
+
+State 130
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   70         | bexpr_op TCGT bexpr_op •
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TADD  shift, and go to state 84
+    TSUB  shift, and go to state 85
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+    TINC  shift, and go to state 89
+
+    $default  reduce using rule 70 (bexpr_op)
+
+
+State 131
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   69         | bexpr_op TCGE bexpr_op •
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TADD  shift, and go to state 84
+    TSUB  shift, and go to state 85
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+    TINC  shift, and go to state 89
+
+    $default  reduce using rule 69 (bexpr_op)
+
+
+State 132
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   65         | bexpr_op TCEQ bexpr_op •
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TADD  shift, and go to state 84
+    TSUB  shift, and go to state 85
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+    TINC  shift, and go to state 89
+
+    $default  reduce using rule 65 (bexpr_op)
+
+
+State 133
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   66         | bexpr_op TCNE bexpr_op •
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+
+    TADD  shift, and go to state 84
+    TSUB  shift, and go to state 85
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+    TINC  shift, and go to state 89
+
+    $default  reduce using rule 66 (bexpr_op)
+
+
+State 134
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   77         | bexpr_op TAND bexpr_op •
+   78         | bexpr_op • TOR bexpr_op
+
+    TADD  shift, and go to state 84
+    TSUB  shift, and go to state 85
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+    TINC  shift, and go to state 89
+    TCLT  shift, and go to state 90
+    TCLE  shift, and go to state 91
+    TCGT  shift, and go to state 92
+    TCGE  shift, and go to state 93
+    TCEQ  shift, and go to state 94
+    TCNE  shift, and go to state 95
+    TOR   shift, and go to state 97
+
+    $default  reduce using rule 77 (bexpr_op)
+
+
+State 135
+
+   65 bexpr_op: bexpr_op • TCEQ bexpr_op
+   66         | bexpr_op • TCNE bexpr_op
+   67         | bexpr_op • TCLE bexpr_op
+   68         | bexpr_op • TCLT bexpr_op
+   69         | bexpr_op • TCGE bexpr_op
+   70         | bexpr_op • TCGT bexpr_op
+   71         | bexpr_op • TADD bexpr_op
+   72         | bexpr_op • TSUB bexpr_op
+   73         | bexpr_op • TMUL bexpr_op
+   74         | bexpr_op • TDIV bexpr_op
+   75         | bexpr_op • TMOD bexpr_op
+   76         | bexpr_op • TINC bexpr_op
+   77         | bexpr_op • TAND bexpr_op
+   78         | bexpr_op • TOR bexpr_op
+   78         | bexpr_op TOR bexpr_op •
+
+    TADD  shift, and go to state 84
+    TSUB  shift, and go to state 85
+    TMUL  shift, and go to state 86
+    TDIV  shift, and go to state 87
+    TMOD  shift, and go to state 88
+    TINC  shift, and go to state 89
+    TCLT  shift, and go to state 90
+    TCLE  shift, and go to state 91
+    TCGT  shift, and go to state 92
+    TCGE  shift, and go to state 93
+    TCEQ  shift, and go to state 94
+    TCNE  shift, and go to state 95
+
+    $default  reduce using rule 78 (bexpr_op)
+
+
+State 136
+
+   29 atype: TIDENTIFIER TCLT type TCGT •
+
+    $default  reduce using rule 29 (atype)
+
+
+State 137
+
+   26 type_list_comma_2_or_more: type TCOMMA type •
+
+    $default  reduce using rule 26 (type_list_comma_2_or_more)
+
+
+State 138
+
+   25 type: TLPAREN type_list_comma_2_or_more TRPAREN TRARROW • result
+
+    TIDENTIFIER  shift, and go to state 23
+    TCLT         shift, and go to state 70
+    TLPAREN      shift, and go to state 24
+
+    result  go to state 149
+    type    go to state 72
+    atype   go to state 26
+
+
+State 139
+
+   27 type_list_comma_2_or_more: type_list_comma_2_or_more TCOMMA type •
+
+    $default  reduce using rule 27 (type_list_comma_2_or_more)
+
+
+State 140
+
+   60 bexpr: TIF bexpr TRETURN expr •
+
+    $default  reduce using rule 60 (bexpr)
+
+
+State 141
+
+   56 bexpr: TIF bexpr TTHEN expr • elif_list
+   57      | TIF bexpr TTHEN expr • elif_list TELSE expr
+
+    $default  reduce using rule 79 (elif_list)
+
+    elif_list  go to state 150
+
+
+State 142
+
+   88 stmt: TVAL TIDENTIFIER TEQUAL • expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 151
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 143
+
+   89 stmt: TVAR TIDENTIFIER TCOLONEQ • expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 152
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 144
+
+   86 block_content: stmt TSEMICOLON block_content_last •
+
+    $default  reduce using rule 86 (block_content)
+
+
+State 145
+
+   52 non_empty_expr_list_comma: non_empty_expr_list_comma TCOMMA expr •
+
+    $default  reduce using rule 52 (non_empty_expr_list_comma)
+
+
+State 146
+
+   16 non_empty_ident_list_comma: non_empty_ident_list_comma TCOMMA • TIDENTIFIER
+
+    TIDENTIFIER  shift, and go to state 153
+
+
+State 147
+
+   22 result: TCLT ident_list_comma TCGT • type
+
+    TIDENTIFIER  shift, and go to state 23
+    TLPAREN      shift, and go to state 24
+
+    type   go to state 154
+    atype  go to state 26
+
+
+State 148
+
+   43 atom_call: atom TLPAREN expr_list_comma TRPAREN •
+
+    $default  reduce using rule 43 (atom_call)
+
+
+State 149
+
+   25 type: TLPAREN type_list_comma_2_or_more TRPAREN TRARROW result •
+
+    $default  reduce using rule 25 (type)
+
+
+State 150
+
+   56 bexpr: TIF bexpr TTHEN expr elif_list •
+   57      | TIF bexpr TTHEN expr elif_list • TELSE expr
+   80 elif_list: elif_list • TELIF bexpr TTHEN expr
+
+    TELSE  shift, and go to state 155
+    TELIF  shift, and go to state 156
+
+    $default  reduce using rule 56 (bexpr)
+
+
+State 151
+
+   88 stmt: TVAL TIDENTIFIER TEQUAL expr •
+
+    $default  reduce using rule 88 (stmt)
+
+
+State 152
+
+   89 stmt: TVAR TIDENTIFIER TCOLONEQ expr •
+
+    $default  reduce using rule 89 (stmt)
+
+
+State 153
+
+   16 non_empty_ident_list_comma: non_empty_ident_list_comma TCOMMA TIDENTIFIER •
+
+    $default  reduce using rule 16 (non_empty_ident_list_comma)
+
+
+State 154
+
+   22 result: TCLT ident_list_comma TCGT type •
+
+    $default  reduce using rule 22 (result)
+
+
+State 155
+
+   57 bexpr: TIF bexpr TTHEN expr elif_list TELSE • expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 157
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 156
+
+   80 elif_list: elif_list TELIF • bexpr TTHEN expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    bexpr       go to state 158
+    bexpr_op    go to state 49
+
+
+State 157
+
+   57 bexpr: TIF bexpr TTHEN expr elif_list TELSE expr •
+
+    $default  reduce using rule 57 (bexpr)
+
+
+State 158
+
+   80 elif_list: elif_list TELIF bexpr • TTHEN expr
+
+    TTHEN  shift, and go to state 159
+
+
+State 159
+
+   80 elif_list: elif_list TELIF bexpr TTHEN • expr
+
+    TIDENTIFIER  shift, and go to state 28
+    TSTRING      shift, and go to state 29
+    TINTEGER     shift, and go to state 30
+    TIF          shift, and go to state 31
+    TFN          shift, and go to state 32
+    TRETURN      shift, and go to state 33
+    TTRUE        shift, and go to state 34
+    TFALSE       shift, and go to state 35
+    TLBRACE      shift, and go to state 36
+    TLBRACK      shift, and go to state 37
+    TLPAREN      shift, and go to state 39
+    TTILDE       shift, and go to state 40
+    TEXCL        shift, and go to state 41
+
+    atom        go to state 43
+    atom_basic  go to state 44
+    atom_call   go to state 45
+    atom_sugar  go to state 46
+    expr        go to state 160
+    bexpr       go to state 48
+    bexpr_op    go to state 49
+    block       go to state 50
+
+
+State 160
+
+   80 elif_list: elif_list TELIF bexpr TTHEN expr •
+
+    $default  reduce using rule 80 (elif_list)

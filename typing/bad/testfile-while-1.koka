@@ -1,0 +1,2 @@
+fun main()
+  while {1} {println("a")}

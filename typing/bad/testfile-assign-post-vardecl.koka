@@ -1,0 +1,6 @@
+
+
+fun main()
+  var a := 8
+  a := "ohno"
+  a

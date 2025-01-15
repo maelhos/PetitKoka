@@ -1,0 +1,28 @@
+fun digit(n: int)
+  if   n==0 then "0"
+  elif n==1 then "1"
+  elif n==2 then "2"
+  elif n==3 then "3"
+  elif n==4 then "4"
+  elif n==5 then "5"
+  elif n==6 then "6"
+  elif n==7 then "7"
+  elif n==8 then "8"
+  else           "9"
+
+fun pos(n: int) {
+  var s := ""
+  var a := n
+  while {a > 0} { s := digit(a % 10) ++ s; a := a / 10 }
+  return s
+}
+
+fun itoa(n: int) {
+  if n == 0 return "0"
+  if n < 0  return "-" ++ pos(~ n)
+  return pos(n)
+}
+
+fun main() {
+  for(-5, 5) fn (n: int) { println(itoa(n*89)) }
+}

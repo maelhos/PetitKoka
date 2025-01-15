@@ -1,0 +1,9 @@
+
+fun bad(b: bool)
+  println("bad")
+  True
+
+fun main()
+  println(if 1>0 || bad(0 < 1) then "ok" else "oups")
+  println(if 1<0 && bad(0 < 1) then "oups" else "ok")
+

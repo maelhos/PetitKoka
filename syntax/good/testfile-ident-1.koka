@@ -1,0 +1,4 @@
+fun foo-x()
+  42
+fun main()
+  foo-x()

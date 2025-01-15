@@ -1,0 +1,9 @@
+
+fun bar(x: int) : (() -> <console> unit)
+  fn () { println(x) }
+
+fun foo(x: int)
+  repeat(2, bar(x))
+
+fun main()
+  for(1, 5, foo)

@@ -1,0 +1,36 @@
+
+fun make_list(n: int, v: int)
+  if n == 0 then [] else [v] ++ make_list(n - 1, v)
+
+fun set(l: list<int>, i: int, v: int)
+  if i == 0 then [v] ++ tail(l)
+  else [default(head(l), 42)] ++ set(tail(l), i - 1, v)
+
+fun get(l: list<int>, i: int)
+  if i == 0 then default(head(l), 42) else get(tail(l), i - 1)
+
+fun print_row(r: list<int>, i: int)
+  var s := ""
+  for (0, i) fn(j: int)
+    if get(r, j) != 0 then
+      s := s ++ "*"
+    else
+      s := s ++ "."
+  println(s)
+
+fun compute_row(r : list<int>, i: int)
+  var r := set(r, i, 0)
+  var j := i
+  while {j>0}
+    r := set(r, j, (get(r, j) + get(r, j - 1)) % 7)
+    j := j - 1
+  set(r, 0, 1)
+
+fun pascal(n: int)
+  var r := make_list(n+1, 0)
+  for (0, n - 1) fn(i: int)
+    r := compute_row(r, i)
+    print_row(r, i)
+
+fun main()
+  pascal(42)

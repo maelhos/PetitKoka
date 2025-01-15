@@ -1,0 +1,8 @@
+
+fun foo() { println("b") }
+
+fun main()
+  var f := fn () { println("a") }
+  f()
+  f := foo
+  f()

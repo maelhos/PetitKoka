@@ -1,0 +1,12 @@
+
+fun f(x: int, y: int, z: int, t: int) {
+  if x != 0 then {
+    println(x);
+    f(y, z, t, x);
+  }
+}
+
+fun main() {
+  f(13, 21, 34, 0);
+}
+

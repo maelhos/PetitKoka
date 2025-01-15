@@ -1,0 +1,2 @@
+fun foo(f: (int,) -> int) { 1 }
+fun main() { }

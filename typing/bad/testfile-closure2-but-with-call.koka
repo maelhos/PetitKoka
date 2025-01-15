@@ -1,0 +1,8 @@
+
+fun bar(x: int) : ()
+  val f = fn () { println(x) }
+  f()
+  ()
+
+fun main()
+  42

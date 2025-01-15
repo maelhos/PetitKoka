@@ -1,0 +1,12 @@
+fun fact(n: int) {
+  var n := n
+  var res := 1
+  while {n > 1}
+    res := res * n
+    n := n - 1
+  return res
+}
+
+fun main() {
+  for(1, 10) fn (n: int) { println(fact(n)) }
+}

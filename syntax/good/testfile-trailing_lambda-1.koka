@@ -1,0 +1,4 @@
+fun foo(f: () -> int)
+  42
+fun main()
+  foo { 2 }

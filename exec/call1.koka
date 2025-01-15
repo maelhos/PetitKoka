@@ -1,0 +1,10 @@
+
+fun f(x: string, y: string) {
+  println(x);
+}
+
+fun main() {
+  f("A", "B");
+  f("B", "A");
+}
+

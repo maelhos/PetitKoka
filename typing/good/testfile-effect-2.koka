@@ -1,0 +1,7 @@
+
+fun body() : <console> (() -> <console> unit)
+  println("a")
+  fn () { println("b") }
+
+fun main()
+  repeat(10, body())

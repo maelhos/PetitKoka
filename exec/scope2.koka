@@ -1,0 +1,13 @@
+
+fun main()
+  val x = "A"
+  println(x)
+  if False then
+    val x = "B"
+    println(x)
+  else
+    val x = "C"
+    val y = "D"
+    println(x)
+    println(y)
+  println(x)

@@ -1,0 +1,24 @@
+fun str(n: int)
+  if   n==0 then "0"
+  elif n==1 then "1"
+  elif n==2 then "2"
+  elif n==3 then "3"
+  elif n==4 then "4"
+  elif n==5 then "5"
+  elif n==6 then "6"
+  elif n==7 then "7"
+  elif n==8 then "8"
+  else           "9"
+
+fun compute(l: int, a: int, b: int, c: int, d: int) {
+  if l == 0 return str(a) ++ "/" ++ str(b) ++ " "
+  compute(l - 1, a, b, a + c, b + d) ++ compute(l - 1, a + c, b + d, c, d)
+}
+
+fun stern_brocot(l: int) {
+  compute(l, 0, 1, 1, 1)
+}
+
+fun main() {
+  println(stern_brocot(4))
+}

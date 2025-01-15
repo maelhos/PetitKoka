@@ -1,0 +1,11 @@
+fun fib(n: int)
+  var x := 0
+  var y := 1
+  repeat(n)
+    val y0 = y
+    y := x+y
+    x := y0
+  x
+
+fun main()
+  for(0, 10) fn (n: int) println(fib(n))

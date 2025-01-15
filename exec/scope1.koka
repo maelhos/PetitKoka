@@ -1,0 +1,11 @@
+
+fun main()
+  val x = "A"
+  println(x)
+  if True then
+    val x = "B"
+    println(x)
+  else
+    val x = "C"
+    println(x)
+  println(x)

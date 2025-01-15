@@ -1,0 +1,10 @@
+
+fun foo(a: unit)
+  ()
+
+// return semantic is completely fine in koka O_o
+
+fun main() : <console> int
+  1 + (return 2)
+  foo(return 8)
+  7

@@ -1,0 +1,6 @@
+fun fib(n: int)
+  if n <= 1 return n
+  return fib(n - 2) + fib(n - 1)
+
+fun main()
+  for(0, 10) fn (n: int) println(fib(n))

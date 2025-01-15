@@ -1,0 +1,10 @@
+
+fun test() : bool
+  False
+
+fun body() : <console> ()
+  println("a")
+
+fun main() : <console,div> ()
+  while(test, body)
+

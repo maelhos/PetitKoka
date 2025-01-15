@@ -1,0 +1,8 @@
+
+// noeud de Landin
+
+fun main()
+  var f := fn (x: int) { x }
+  f := (fn (x: int) { if x <= 1 then x else f(x - 2) + f(x - 1) })
+  println(f(10))
+

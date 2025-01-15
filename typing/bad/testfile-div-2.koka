@@ -1,0 +1,5 @@
+
+fun foo(f: () -> ()) { f() }
+
+fun main() : <div> unit { foo(main) }
+

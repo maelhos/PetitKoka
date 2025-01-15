@@ -1,0 +1,32 @@
+fun make_list(n: int, v: int)
+  if n == 0 then [] else [v] ++ make_list(n - 1, v)
+
+fun set(l: list<int>, i: int, v: int)
+  if i == 0 then [v] ++ tail(l)
+  else [default(head(l), 42)] ++ set(tail(l), i - 1, v)
+
+fun get(l: list<int>, i: int)
+  if i == 0 then default(head(l), 42) else get(tail(l), i - 1)
+
+
+fun cycle(n: int)
+  var c := make_list(n, 0)
+  for (0, n - 1) fn(i: int) c := set(c, i, (i+1) % n)
+  c
+
+fun josephus(n: int, p: int)
+  var c := cycle(n)
+  var i := 0
+  while {get(c, i) != i}
+    /* on élimine un joueur */
+    for (1, p - 2) fn(_: int)
+      i := get(c, i)
+    c := set(c, i, get(c, get(c, i)))
+    i := get(c, i)
+  return i+1
+
+fun main()
+  println(josephus(7, 5)) // 6
+  println(josephus(5, 5)); // 2
+  println(josephus(5, 17)); // 4
+  println(josephus(13, 2)); // 11

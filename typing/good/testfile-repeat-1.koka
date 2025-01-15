@@ -1,0 +1,2 @@
+fun main()
+  repeat(10) fn () ()

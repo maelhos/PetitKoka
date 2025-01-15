@@ -1,0 +1,5 @@
+
+fun main()
+  val f = fn (x: int) {1}
+  x
+

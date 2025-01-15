@@ -1,0 +1,6 @@
+
+fun foo(x: int)
+  repeat(2, fn () { println(x) })
+
+fun main()
+  for(1, 5, foo)

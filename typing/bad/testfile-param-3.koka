@@ -1,0 +1,4 @@
+
+fun foo(x: int, x: bool) {}
+fun main() { }
+

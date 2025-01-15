@@ -1,0 +1,2 @@
+
+fun main() { val r = (if 7 <= 1 then return 1) + 8; 8 }

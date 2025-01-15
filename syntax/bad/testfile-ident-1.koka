@@ -1,0 +1,4 @@
+fun foo'12'()
+  42
+fun main()
+  42

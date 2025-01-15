@@ -1,0 +1,2 @@
+fun foo(foo: int) foo
+fun main() foo(42)

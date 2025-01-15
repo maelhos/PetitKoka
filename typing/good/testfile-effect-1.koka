@@ -1,0 +1,9 @@
+fun foo() : <console> int
+  println("a")
+  1
+
+fun bar() : <console> int
+  ~ foo()
+
+fun main()
+  bar()

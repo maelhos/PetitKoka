@@ -1,0 +1,2 @@
+fun main()
+  for(1,10) fn (x:int) ()

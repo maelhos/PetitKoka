@@ -1,0 +1,50 @@
+
+fun add(x: int, y: int)
+  x + y
+fun sub(x: int, y: int)
+  x - y
+fun mul(x: int, y: int)
+  val t = x * y
+  (t + 8192 / 2) / 8192
+fun divide(x: int, y: int)
+  val t = x * 8192
+  (t + y / 2) / y
+fun of_int(x: int)
+  x * 8192
+
+fun inside(x: int, y: int) : <div> bool
+  var xn := of_int(0)
+  var yn := of_int(0)
+  var n := 0
+  var b := True
+  while { n < 100 && b }
+    val xn2 = mul(xn, xn)
+    val yn2 = mul(yn, yn)
+    if add(xn2, yn2) > of_int(4) then b := False
+    val xn3 = add(sub(xn2, yn2), x)
+    yn := add(mul(of_int(2), mul(xn, yn)), y)
+    xn := xn3
+    n := n + 1
+  return b
+
+fun run(steps: int)
+  val xmin = of_int(-2)
+  val xmax = of_int(1)
+  val deltax = divide(sub(xmax, xmin), of_int(2 * steps))
+  val ymin = of_int(-1)
+  val ymax = of_int(1)
+  val deltay = divide(sub(ymax, ymin), of_int(steps))
+  for (0, steps - 1) fn(i: int)
+    var s := ""
+    val y = add(ymin, mul(of_int(i), deltay))
+    for (0, 2*steps - 1) fn(j: int)
+      val x = add(xmin, mul(of_int(j), deltax))
+      if inside(x, y) then
+        s := s ++ "0"
+      else
+        s := s ++ "1"
+    println(s)
+
+fun main()
+  run(30)
+

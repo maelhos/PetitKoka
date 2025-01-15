@@ -1,0 +1,8 @@
+
+fun test() : bool
+  False
+fun body() : <console> ()
+  println("a")
+fun main() : <div> ()
+  while(test, body)
+
