@@ -90,17 +90,12 @@ EffectType typingVisitor::visit(NFunBody* node)
     {
         Type t = *tv.visit(param);
         params.push_back(t);
-
-        //if (std::holds_alternative<TFun*>(t))
-         //   std::get<TFun*>(t)->ret->isWeak = false; // function type are absolute meaning you HAVE to specify desired effect for function argument
     }
     
     EffectType* infered_t = new EffectType(tv.visit(node->bodyExpr));
 
     node->t = EffectType(new TFun(params, infered_t));
     node->t.addEffects(infered_t->effects);
-
-    std::cout << "DEBUG funbody :" << toString(node->t) << std::endl;
 
     if (node->retType)
     {
@@ -320,7 +315,6 @@ EffectType typingVisitor::visit(NBexprIf* node)
 
     node->t = tthen;
 
-    std::cout << "debug : " << toString(tthen) << " and " << toString(telse) << std::endl;
     if (!propag.unify(tthen, telse))
         typingError("If expression expects both then and else type to be the same, not \"" + toString(tthen) + "\" and \"" + toString(telse) + "\"", node->loc);
 
@@ -466,7 +460,6 @@ EffectType typingVisitor::visit(NAtomIdent* node)
     {
         if (propag.current_decl.second == *node->val) // add div to main decl
         {
-            std::cout << "OH " << toString(env[id_fun]) << " " << env[id_fun].effects.size() << std::endl;
             assert(env[id_fun].isWeak);
             env[id_fun].addEffects({Effect::EDiv});
         }
@@ -539,8 +532,6 @@ EffectType typingVisitor::visit(NAtomCall* node)
                 typingError("Function \"" + toString(node->fun) + "\" expect effects return types as " + std::to_string(i + 1) + " to be of type \"" + toString(ctf->elts[i]) + "\" while the provided one was of type : \"" + toString(te) + "\"" , node->loc);
 
             atf = std::get<TFun*>(*te)->ret;
-
-            std::cout << "DEBUG arg ret type :" << toString(*atf) << " || " << toString(*std::get<TFun*>(ctf->elts[i])->ret) << std::endl;
         }
     }
     

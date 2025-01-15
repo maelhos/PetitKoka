@@ -7,7 +7,6 @@ std::string effectToString(const Effect& s)
     else if (s == Effect::EDiv) return "div";
     else if (s == Effect::ETotal) return "total";
 
-
     std::cout << "Internal error : effect " << long(s) << " does not have a string representation" << std::endl;
     exit(2);
 
@@ -47,7 +46,7 @@ EffectType::operator std::string() const
 }
 
 void EffectType::addEffects(const ESet& s)
-    { effects = setUni(effects, s); /*if (s.size()) isWeak = false; */ }
+    { effects = setUni(effects, s); }
 
 
 bool EffectType::isSubst(const EffectType& et) const
