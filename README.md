@@ -12,6 +12,28 @@ This repository contains a C++ implementation of a compiler for a subset of the 
 
 ---
 
+## Build Instructions
+
+1.Clone the repository:
+
+```bash
+git clone https://github.com/maelhos/petit-koka.git
+cd petit-koka
+```
+
+2.Build the compiler:
+
+```bash
+make clean
+make
+```
+
+3.Run the tests:
+
+```bash
+./test.sh -2 ./kokac
+```
+
 ## Errors made along the way
 
 - Using Bison/Flex was a bad idea, it is very old, forces the use of raw pointers, cant emit tokens (in flex), cant forward lookup tokens (in flex), RIP Bison/Flex, shouldn't have exhumed you.
@@ -72,28 +94,6 @@ To build and use this compiler, the following dependencies are required:
 - `flex` (Lexical Analyzer Generator)
 
 ---
-
-## Build Instructions
-
-1.Clone the repository:
-
-```bash
-git clone https://github.com/maelhos/petit-koka.git
-cd petit-koka
-```
-
-2.Build the compiler:
-
-```bash
-make clean
-make
-```
-
-3.Run the tests:
-
-```bash
-./test.sh -2 ./kokac
-```
 
 ## Acknowledgments
 
