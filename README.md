@@ -17,7 +17,7 @@ This repository contains a C++ implementation of a compiler for a subset of the 
 1.Clone the repository:
 
 ```bash
-git clone https://github.com/maelhos/petit-koka.git
+git clone git@github.com:maelhos/PetitKoka.git
 cd petit-koka
 ```
 
